@@ -6,6 +6,7 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.twitter.finagle.http.path._
 import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
+import org.moon.common.Json
 import org.moon.config.{Configure, JdbcConfig}
 import org.moon.http.RestApi
 import org.moon.store.ConnectorFactory
@@ -48,7 +49,11 @@ class UserAuth extends RestApi {
     val response = Response()
 
     Path(request.path) match {
-      // 登录
+      /**
+       * 用户登录
+       *
+       * @note /login
+       */
       case Root / "login" =>
         if (request.method.equals(Method.Post)) {
           // 当前请求时间
@@ -61,13 +66,10 @@ class UserAuth extends RestApi {
           (username, passwd) match {
             case (Some(x1), Some(x2)) =>
               if (x1.isEmpty || x2.isEmpty) {
-                response.setContentString(
-                  """
-                    |{
-                    |  "message": "username and passwd isn't null",
-                    |  "status: "0"
-                    |}
-                    |""".stripMargin)
+                response.setContentString(Json.of(Map(
+                  "message" -> "username or passwd isn't null",
+                  "status" -> "0"
+                )))
                 response.status(Status.Unauthorized)
                 // 直接返回响应
                 return Future.value(response)
@@ -90,47 +92,34 @@ class UserAuth extends RestApi {
 
               // 签名并返回JWT令牌
               jwt.sign(key)
-              response.setContentString(
-                s"""
-                   |{
-                   |  "message": "login success",
-                   |  "status": "1",
-                   |  "token": "${jwt.serialize()}"
-                   |}
-                   |""".stripMargin)
+              response.setContentString(Json.of(Map(
+                "message" -> "login success",
+                "status" -> "1",
+                "token" -> jwt.serialize()
+              )))
               response.status(Status.Ok)
             } else {
               // 密码错误
-              response.setContentString(
-                """
-                  |{
-                  |  "message": "passwd error"
-                  |}
-                  |""".stripMargin)
+              response.setContentString(Json.of(Map("message" -> "passwd error")))
               response.status(Status.Unauthorized)
             }
           } else {
             // 用户不存在
-            response.setContentString(
-              """
-                |{
-                |  "message": "user don't exists"
-                |}
-                |""".stripMargin)
+            response.setContentString(Json.of(Map("message" -> "account don't exists")))
             response.status(Status.Unauthorized)
           }
 
         } else {
           // 请求方法错误
-          response.setContentString(
-            """
-              |{
-              |  "message": "please use POST method"
-              |}
-              |""".stripMargin)
+          response.setContentString(Json.of(Map("message" -> "please use POST method")))
           response.status(Status.MethodNotAllowed)
         }
-      // 注册
+
+      /**
+       * 用户注册
+       *
+       * @note /register
+       */
       case Root / "register" =>
         if (request.method.equals(Method.Post)) {
           // 获取请求的账号密码
@@ -143,13 +132,10 @@ class UserAuth extends RestApi {
             case (Some(x1), Some(x2), Some(x3)) =>
               // 若用户名和两个密码有一个为空则直接返回
               if (x1.isEmpty || x2.isEmpty || x3.isEmpty) {
-                response.setContentString(
-                  """
-                    |{
-                    |  "message": "username,passwd1 and passwd2 isn't null",
-                    |  "status: "0"
-                    |}
-                    |""".stripMargin)
+                response.setContentString(Json.of(Map(
+                  "message" -> "username,passwd1 and passwd2 isn't null",
+                  "status" -> "0"
+                )))
                 response.status(Status.Unauthorized)
                 // 直接返回响应
                 return Future.value(response)
@@ -158,53 +144,30 @@ class UserAuth extends RestApi {
 
           // 若查询到重复用户名
           if (client.get("username", username.get).next()) {
-            response.setContentString(
-              """
-                |{
-                |  "message": "username already exists"
-                |}
-                |""".stripMargin)
+            response.setContentString(Json.of(Map("message" -> "username already exists")))
             response.status(Status.Unauthorized)
           } else if (!passwd1.get.equals(passwd2.get)) {
             // 二次输入密码不一致
-            response.setContentString(
-              """
-                |{
-                |  "message": "passwd1 and passwd2 are inconsistent"
-                |}
-                |""".stripMargin)
+            response.setContentString(Json.of(Map("message" -> "passwd1 and passwd2 are inconsistent")))
             response.status(Status.Unauthorized)
           } else {
             client.put(
               List("username", "passwd"),
               List(username.get, passwd1.get))
-            response.setContentString(
-              """
-                |{
-                |  "message": "register success",
-                |  "status": "1"
-                |}
-                |""".stripMargin)
+            response.setContentString(Json.of(Map(
+              "message" -> "register success",
+              "status" -> "1"
+            )))
             response.status(Status.Ok)
           }
         } else {
           // 请求方法错误
-          response.setContentString(
-            """
-              |{
-              |  "message": "please use POST method"
-              |}
-              |""".stripMargin)
+          response.setContentString(Json.of(Map("message" -> "please use POST method")))
           response.status(Status.MethodNotAllowed)
         }
       // 异常响应
       case _ =>
-        response.setContentString(
-          """
-            |{
-            |  "message": "not found"
-            |}
-            |""".stripMargin)
+        response.setContentString(Json.of(Map("message" -> "not found")))
         response.status(Status.NotFound)
     }
 

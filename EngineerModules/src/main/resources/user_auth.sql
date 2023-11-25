@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS user_auth(
+	`username` VARCHAR(32) PRIMARY KEY,
+	`passwd` VARCHAR(32) NOT NULL
+	);

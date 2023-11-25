@@ -13,36 +13,38 @@ class RequestRouter extends ApiGateway {
   override def apply(request: Request): Future[Response] = {
     val response = Response()
 
+    // 路由选择可以优化为路径参数
+
     Path(request.path) match {
       // 将请求转发到后端login RESTapi
-      case Root / "login" =>
-        // 转发请求并处理服务返回的请求
-        new ForwardRequest()
-          .send("localhost", "50010", request)
-          .process({ x =>
-            response.setContentString(x.getContentString())
-          })
-          .close
-
+      case Root / "login" => forwardRequest("localhost", "50010", request, response)
       // 转发请求到后端register RESTapi
-      case Root / "register" =>
-        new ForwardRequest()
-          .send("localhost", "50010", request)
-          .process({ x =>
-            response.setContentString(x.getContentString())
-          })
-          .close
+      case Root / "register" => forwardRequest("localhost", "50010", request, response)
+      // 转发请求到后端tempNote RESTapi
+      case Root / "note" / _ => forwardRequest("localhost", "50020", request, response)
       // 异常访问
-      case _ =>
-        response.setContentString(
-          """
-            |{
-            |  "message": "not found"
-            |}
-            |""".stripMargin)
-        response.status(Status.NotFound)
+      case _ => notFound(response)
     }
-
     Future.value(response)
+  }
+
+  private def forwardRequest(host: String, port: String,
+                             request: Request, response: Response): Unit = {
+    new ForwardRequest()
+      .send(host, port, request)
+      .process({ x =>
+        response.setContentString(x.getContentString())
+      })
+      .close
+  }
+
+  private def notFound(response: Response): Unit = {
+    response.setContentString(
+      """
+        |{
+        |  "message": "not found"
+        |}
+        |""".stripMargin)
+    response.status(Status.NotFound)
   }
 }

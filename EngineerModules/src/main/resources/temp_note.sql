@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS temp_note(
+	`id` INT PRIMARY KEY AUTO_INCREMENT,
+	`time` TIMESTAMP ,
+	`title` VARCHAR(32) NOT NULL,
+	`content` TEXT NOT NULL
+	);
