@@ -5,7 +5,7 @@ import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
 import io.circe.parser._
 import org.moon.common.Json
-import org.moon.config.JdbcConfig
+import org.moon.common.config.JdbcConfig
 import org.moon.http.RestApi
 import org.moon.store.ConnectorFactory
 
@@ -52,7 +52,7 @@ class TempNote extends RestApi {
 
           json match {
             case Right(value) =>
-              // 添加时间
+              // 添加笔记的时间
               val time = ZonedDateTime.ofInstant(
                   Instant.now(), // 获取当前时间戳
                   ZoneOffset.UTC)
@@ -81,10 +81,37 @@ class TempNote extends RestApi {
       /**
        * 修改笔记
        *
-       * @note /note/update
+       * @note /note/update?id=XX
        */
       case Root / "note" / "update" =>
         if (request.method.equals(Method.Put)) {
+          // 获取请求参数
+          val id = request.getParam("id")
+          val body = request.getContentString()
+          val json = parse(body)
+
+          //
+          json match {
+            case Right(value) =>
+              // 更新上次修改的时间
+              val time = ZonedDateTime.ofInstant(
+                  Instant.now(),
+                  ZoneOffset.UTC)
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+              // 获取标题
+              val title = value.hcursor
+                .get[String]("title")
+                .getOrElse("")
+              // 获取内容
+              val content = value.hcursor
+                .get[String]("content")
+                .getOrElse("")
+              // 修改笔记
+              client.update(
+                "id", id,
+                List("time", "title", "content"),
+                List(time, title, content))
+          }
 
         } else {
           // 请求错误
@@ -95,11 +122,14 @@ class TempNote extends RestApi {
       /**
        * 删除笔记
        *
-       * @note /note/delete
+       * @note /note/delete?id=XX
        */
       case Root / "note" / "delete" =>
         if (request.method.equals(Method.Delete)) {
-
+          val id = request.getParam("id")
+          client.delete("id", id)
+          response.setContentString(Json.of(Map("message" -> "delete success")))
+          response.status(Status.Ok)
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need DELETE")))
@@ -109,7 +139,7 @@ class TempNote extends RestApi {
       /**
        * 获取指定ID的笔记
        *
-       * @note /note/filter?id=x
+       * @note /note/filter?id=XX
        */
       case Root / "note" / "filter" =>
         if (request.method.equals(Method.Get)) {

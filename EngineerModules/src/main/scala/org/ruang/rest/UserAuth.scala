@@ -7,7 +7,7 @@ import com.twitter.finagle.http.path._
 import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
 import org.moon.common.Json
-import org.moon.config.{Configure, JdbcConfig}
+import org.moon.common.config.{Configure, JdbcConfig}
 import org.moon.http.RestApi
 import org.moon.store.ConnectorFactory
 
