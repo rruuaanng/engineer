@@ -26,16 +26,16 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'org.moon:peace-utils_2.12:1.0'
-    implementation 'com.typesafe.slick:slick_2.12:3.3.0'
     implementation 'org.apache.hbase:hbase-client:2.2.2'
-    implementation 'com.twitter:finagle-core_2.12:21.10.0'
-    implementation 'com.twitter:finagle-http_2.12:21.10.0'
-    implementation 'com.typesafe:config:1.4.0'
     implementation 'io.circe:circe-core_2.12:0.14.0'
     implementation 'io.circe:circe-generic_2.12:0.14.0'
     implementation 'com.nimbusds:nimbus-jose-jwt:9.30'
+    implementation 'org.apache.zookeeper:zookeeper:3.4.9'
     implementation 'io.circe:circe-parser_2.12:0.14.0'
     implementation 'mysql:mysql-connector-java:8.0.28'
+    implementation 'io.grpc:grpc-netty:1.40.1'
+    implementation 'io.grpc:grpc-protobuf:1.40.1'
+    implementation 'io.grpc:grpc-stub:1.40.1'
 }
 
 application {

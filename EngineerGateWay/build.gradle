@@ -26,9 +26,12 @@ dependencies {
     implementation 'org.moon:peace-utils_2.12:1.0'
     implementation 'com.twitter:finagle-core_2.12:21.10.0'
     implementation 'com.twitter:finagle-http_2.12:21.10.0'
-    implementation 'com.typesafe:config:1.4.0'
     implementation 'org.slf4j:slf4j-log4j12:2.0.5'
+    implementation 'io.grpc:grpc-netty:1.40.1'
+    implementation 'io.grpc:grpc-protobuf:1.40.1'
+    implementation 'io.grpc:grpc-stub:1.40.1'
 }
+
 
 application {
     mainClassName = 'org.ruang.Main'
