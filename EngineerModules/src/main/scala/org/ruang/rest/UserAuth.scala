@@ -47,6 +47,7 @@ class UserAuth extends RestApi {
 
   override def apply(request: Request): Future[Response] = {
     val response = Response()
+    response.setContentTypeJson()
 
     Path(request.path) match {
       /**

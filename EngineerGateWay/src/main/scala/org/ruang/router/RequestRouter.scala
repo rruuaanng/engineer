@@ -3,6 +3,7 @@ package org.ruang.router
 import com.twitter.finagle.http.path._
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
+import org.moon.common.Json
 import org.moon.http.{ApiGateway, ForwardRequest}
 
 
@@ -23,7 +24,9 @@ class RequestRouter extends ApiGateway {
       // 转发请求到后端tempNote RESTapi
       case Root / "note" / _ => forwardRequest("localhost", "50020", request, response)
       // 异常访问
-      case _ => notFound(response)
+      case _ =>
+        response.setContentString(Json.of(Map("message" -> "not found")))
+        response.status(Status.NotFound)
     }
     Future.value(response)
   }
@@ -38,13 +41,4 @@ class RequestRouter extends ApiGateway {
       .close
   }
 
-  private def notFound(response: Response): Unit = {
-    response.setContentString(
-      """
-        |{
-        |  "message": "not found"
-        |}
-        |""".stripMargin)
-    response.status(Status.NotFound)
-  }
 }
