@@ -23,7 +23,7 @@ class ZkRegisterCenter(host: String, port: String) extends RegisterCenter {
    * @param port 端口
    * @param url  路由
    */
-  def register(name: String, host: String, port: String): Unit = {
+  override def register(name: String, host: String, port: String): Unit = {
     val stat = Option(client.exists(root, false))
     if (stat.isDefined) {
       // 创建节点
@@ -35,27 +35,7 @@ class ZkRegisterCenter(host: String, port: String) extends RegisterCenter {
     }
   }
 
-  /**
-   * 查找服务
-   *
-   * @param name 服务名称
-   * @return (服务信息,服务状态)
-   */
-  def find(name: String): (String, Boolean) = {
-    val services = client.getChildren(root, false)
-    services.forEach(x => {
-      // 若找到对应名称的服务则返回服务名称
-      if ("[a-zA-Z]+".r
-        .findFirstMatchIn(x)
-        .getOrElse("")
-        .toString
-        .equals(name)) {
-        val server = new String(client.getData(s"$root/$x", false, null))
-        return (server, true)
-      }
-    })
-    ("", false)
-  }
+  override def discover(name: String): (String, String) = ("", "")
 }
 
 object ZkRegisterCenter {
