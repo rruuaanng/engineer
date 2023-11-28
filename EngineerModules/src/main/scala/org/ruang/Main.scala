@@ -30,8 +30,8 @@ object Main {
       .apply()
 
     // 快速注册服务
-    new FastZkRegister(zkClient, config)
-      .add(List("userAuth", "tempNote"))
+//    new FastZkRegister(zkClient, config)
+//      .add(List("userAuth", "tempNote"))
     // 启动服务
     servers.foreach(x => Await.result(x))
   }
