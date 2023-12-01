@@ -5,7 +5,7 @@ import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
 import org.moon.common.Json
 import org.moon.http.RestApi
-import org.ruang.controller.TempNoteControl
+import org.ruang.handlers.TempNoteHandler
 
 /**
  * 临时笔记
@@ -30,7 +30,7 @@ class TempNote extends RestApi {
           // 获取body中的JSON
           val body = request.getContentString()
           // 创建一个笔记
-          TempNoteControl.create(body, response)
+          TempNoteHandler.create(body, response)
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need POST")))
@@ -48,7 +48,7 @@ class TempNote extends RestApi {
           val id = request.getParam("id")
           val body = request.getContentString()
           // 修改指定ID的笔记
-          TempNoteControl.update(id, body, response)
+          TempNoteHandler.update(id, body, response)
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need PUT")))
@@ -64,7 +64,7 @@ class TempNote extends RestApi {
         if (request.method.equals(Method.Delete)) {
           val id = request.getParam("id")
           // 删除指定ID的笔记
-          TempNoteControl.delete(id, response)
+          TempNoteHandler.delete(id, response)
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need DELETE")))
@@ -81,7 +81,7 @@ class TempNote extends RestApi {
           // 获取参数和对应ID的数据
           val id = request.getParam("id")
           // 获取指定的数据
-          TempNoteControl.filter(id, response)
+          TempNoteHandler.filter(id, response)
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need GET")))
@@ -96,7 +96,7 @@ class TempNote extends RestApi {
       case Root / "note" / "gets" =>
         if (request.method.equals(Method.Get)) {
           // 获取所有数据
-          TempNoteControl.gets(response)
+          TempNoteHandler.gets(response)
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need GET")))

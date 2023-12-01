@@ -5,7 +5,7 @@ import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
 import org.moon.common.Json
 import org.moon.http.RestApi
-import org.ruang.controller.UserAuthControl
+import org.ruang.handlers.UserAuthHandler
 
 import java.util.Date
 
@@ -35,12 +35,12 @@ class UserAuth extends RestApi {
           val passwd = Option(request.getParam("passwd"))
 
           // 检查参数是否为空
-          if (UserAuthControl.loginParamIsNull(
+          if (UserAuthHandler.loginParamIsNull(
             username, passwd, response))
             return Future.value(response)
 
           // 验证用户
-          UserAuthControl.
+          UserAuthHandler.
             verifyAccount(username.get, passwd.get, now, response)
         } else {
           // 请求方法错误
@@ -61,12 +61,12 @@ class UserAuth extends RestApi {
           val passwd2 = Option(request.getParam("passwd2"))
 
           // 检查参数是否为空
-          if (UserAuthControl.registerParamIsNull(
+          if (UserAuthHandler.registerParamIsNull(
             username, passwd1, passwd2, response))
             return Future.value(response)
 
           // 检查用户是否已经注册
-          UserAuthControl.checkAccountExists(
+          UserAuthHandler.checkAccountExists(
             username.get,
             passwd1.get,
             passwd2.get,
