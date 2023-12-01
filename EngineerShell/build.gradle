@@ -1,0 +1,25 @@
+plugins {
+    id 'scala'
+}
+
+group = 'org.ruang'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url uri('E:/BuildProject/Maven/repository/mvn-repository')
+    }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'org.moon:peace-utils_2.12:1.0'
+    implementation 'mysql:mysql-connector-java:8.0.28'
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+}
+
+test {
+    useJUnitPlatform()
+}

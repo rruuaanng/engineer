@@ -2,3 +2,4 @@ rootProject.name = 'Engineer'
 
 include ':EngineerModules'
 include ':EngineerGateWay'
+include ':EngineerShell'

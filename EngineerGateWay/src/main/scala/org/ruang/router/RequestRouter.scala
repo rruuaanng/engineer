@@ -66,7 +66,7 @@ class RequestRouter extends ApiGateway {
       val Array(host, port) = hostPort.split(":")
       // 转发到对应服务
       new ForwardRequest()
-        .send(host, port, request)
+        .+>(host, port, request)
         .process { x =>
           response.setContentString(x.getContentString())
         }

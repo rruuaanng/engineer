@@ -3,8 +3,9 @@ package org.ruang
 import com.twitter.util.Await
 import org.moon.common.config.Configure
 import org.moon.http.CorsSetting
-import org.ruang.register.{FastZkRegister, ZkRegisterCenter}
-import org.ruang.rest.{TempNote, UserAuth}
+import org.ruang.register.ZkRegisterCenter
+import org.ruang.remote.RemoteCommand
+import org.ruang.rest.{Mail, TempNote, UserAuth}
 
 
 object Main {
@@ -17,7 +18,6 @@ object Main {
     config.getSection("zkServer", "port"))
 
 
-
   def main(args: Array[String]): Unit = {
     // 设置跨域
     val config = Configure()
@@ -25,14 +25,19 @@ object Main {
       .add(new UserAuth, config.getSection(
         "userAuth",
         "port"))
+      .add(new Mail, config.getSection(
+        "mailServer",
+        "port"
+      ))
       .add(new TempNote, config.getSection(
         "tempNote",
         "port"))
+      .add(new RemoteCommand, "4000")
       .apply()
 
     // 快速注册服务
-//    new FastZkRegister(zkClient, config)
-//      .add(List("userAuth", "tempNote"))
+    //    new FastZkRegister(zkClient, config)
+    //      .add(List("userAuth", "tempNote"))
     // 启动服务
     servers.foreach(x => Await.result(x))
   }

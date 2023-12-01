@@ -1,7 +1,10 @@
 package org.ruang.remote
 
-import com.twitter.finagle.http.{Request, Response}
+import com.twitter.finagle.http.path._
+import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
+import io.circe.parser.parse
+import org.moon.common.Json
 import org.moon.http.RestApi
 
 /**
@@ -15,6 +18,40 @@ class RemoteCommand extends RestApi {
   override def apply(request: Request): Future[Response] = {
     val response = Response()
     response.setContentTypeJson()
+
+    Path(request.path) match {
+      /**
+       * 接收命令
+       *
+       * @note /command
+       */
+      case Root / "command" =>
+        if (request.method.equals(Method.Post)) {
+          val body = request.getContentString()
+          val json = parse(body)
+
+          json match {
+            case Right(value) =>
+              val path = value.hcursor.get[String]("op").getOrElse("")
+              path match {
+                case "send" =>
+                  println("send")
+                case "note" =>
+                  println("note")
+              }
+          }
+          response.setContentString(Json.of(Map("message" -> "execute success")))
+          response.status(Status.Ok)
+        } else {
+          // 请求方法错误
+          response.setContentString(Json.of(Map("message" -> "need POST")))
+          response.status(Status.MethodNotAllowed)
+        }
+      // 异常请求
+      case _ =>
+        response.setContentString(Json.of(Map("message" -> "not found")))
+        response.status(Status.NotFound)
+    }
 
     Future.value(response)
   }
