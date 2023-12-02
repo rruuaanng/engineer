@@ -3,6 +3,7 @@ package org.ruang.cmd
 class TempNoteCommand
   extends Command with Display[String] {
   override def execute(op: String): String = {
+    // TODO
     op match {
       case "create" => println("create")
       case "delete" => println("delete")

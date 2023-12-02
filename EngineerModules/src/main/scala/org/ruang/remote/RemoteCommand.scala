@@ -19,6 +19,7 @@ class RemoteCommand extends RestApi {
     val response = Response()
     response.setContentTypeJson()
 
+    // TODO
     Path(request.path) match {
       /**
        * 接收命令
@@ -30,11 +31,18 @@ class RemoteCommand extends RestApi {
           val body = request.getContentString()
           val json = parse(body)
 
+
           json match {
             case Right(value) =>
-              val path = value.hcursor.get[String]("op").getOrElse("")
-              path match {
+              // op是shell远程发送的操作
+              // 表示了这个POST包需要执行的操作
+              val op = value.hcursor.get[String]("op").getOrElse("")
+              op match {
                 case "send" =>
+                  // 获取命令中的标题和邮件内容
+                  val title = value.hcursor.get[String]("title").getOrElse("")
+                  val text = value.hcursor.get[String]("text").getOrElse("")
+
                   println("send")
                 case "note" =>
                   println("note")

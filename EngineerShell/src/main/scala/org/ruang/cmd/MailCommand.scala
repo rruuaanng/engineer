@@ -28,9 +28,6 @@ class MailCommand
           "text" -> text,
           "filepath" -> filepath
         ))
-      case "receive" =>
-        println("receive")
-        ""
     }
   }
 }
