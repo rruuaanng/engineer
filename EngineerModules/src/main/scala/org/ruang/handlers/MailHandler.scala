@@ -1,5 +1,7 @@
 package org.ruang.handlers
 
+import com.twitter.util.Future
+
 import java.util.Properties
 import javax.mail.Message.RecipientType
 import javax.mail._
@@ -70,7 +72,7 @@ class MailHandler(account: String, passwd: String) {
       this
     }
 
-    def send(props: Properties): Unit = {
+    def send(props: Properties): Future[Unit] = Future {
       // 设置session连接属性
       props.put(s"mail.${setting.protocolTyp}.auth", "true")
       props.put(s"mail.${setting.protocolTyp}.starttls.enable", "true")
@@ -134,7 +136,7 @@ class MailHandler(account: String, passwd: String) {
     }
 
 
-    def receive(props: Properties): Array[Message] = {
+    def receive(props: Properties): Future[Array[Message]] = Future {
       props.put(s"mail.${setting.protocolTyp}.host", setting.server)
       props.put(s"mail.${setting.protocolTyp}.port", setting.port)
       props.put(s"mail.${setting.protocolTyp}.ssl.enable", "true")

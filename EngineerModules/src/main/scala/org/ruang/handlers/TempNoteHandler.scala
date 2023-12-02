@@ -1,6 +1,7 @@
 package org.ruang.handlers
 
 import com.twitter.finagle.http.{Response, Status}
+import com.twitter.util.Future
 import io.circe.parser.parse
 import org.moon.common.Json
 import org.moon.common.config.JdbcConfig
@@ -26,7 +27,7 @@ object TempNoteHandler {
   // 数据库连接客户端
   private val client = ConnectorFactory.createJdbc("temp_note", dbConfig)
 
-  def create(body: String, response: Response): Unit = {
+  def create(body: String, response: Response): Future[Unit] = Future {
     // 解析JSON
     val json = parse(body)
 
@@ -54,7 +55,7 @@ object TempNoteHandler {
     response.status(Status.Ok)
   }
 
-  def update(id: String, body: String, response: Response): Unit = {
+  def update(id: String, body: String, response: Response): Future[Unit] = Future {
     // 解析JSON
     val json = parse(body)
 
@@ -83,13 +84,13 @@ object TempNoteHandler {
     }
   }
 
-  def delete(id: String, response: Response): Unit = {
+  def delete(id: String, response: Response): Future[Unit] = Future {
     client.delete("id", id)
     response.setContentString(Json.of(Map("message" -> "delete success")))
     response.status(Status.Ok)
   }
 
-  def filter(id: String, response: Response): Unit = {
+  def filter(id: String, response: Response): Future[Unit] = Future {
     val note = client.get("id", id)
 
     // 若查询到则返回指定信息
@@ -109,7 +110,7 @@ object TempNoteHandler {
     }
   }
 
-  def gets(response: Response): Unit = {
+  def gets(response: Response): Future[Unit] = Future {
     val notes = client.gets(List("id", "time", "title", "content"))
     val json = ListBuffer[String]()
 
@@ -126,8 +127,4 @@ object TempNoteHandler {
     response.setContentString(s"[${json.mkString(",")}]")
     response.status(Status.Ok)
   }
-
-  //  def gets(): Unit = {
-  //
-  //  }
 }

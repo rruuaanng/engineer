@@ -30,7 +30,9 @@ class TempNote extends RestApi {
           // 获取body中的JSON
           val body = request.getContentString()
           // 创建一个笔记
-          TempNoteHandler.create(body, response)
+          TempNoteHandler
+            .create(body, response)
+            .onSuccess(_ => println("create success"))
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need POST")))
@@ -48,7 +50,9 @@ class TempNote extends RestApi {
           val id = request.getParam("id")
           val body = request.getContentString()
           // 修改指定ID的笔记
-          TempNoteHandler.update(id, body, response)
+          TempNoteHandler
+            .update(id, body, response)
+            .onSuccess(_ => println("update success"))
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need PUT")))
@@ -64,7 +68,9 @@ class TempNote extends RestApi {
         if (request.method.equals(Method.Delete)) {
           val id = request.getParam("id")
           // 删除指定ID的笔记
-          TempNoteHandler.delete(id, response)
+          TempNoteHandler
+            .delete(id, response)
+            .onSuccess(_ => println("delete success"))
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need DELETE")))
@@ -81,7 +87,9 @@ class TempNote extends RestApi {
           // 获取参数和对应ID的数据
           val id = request.getParam("id")
           // 获取指定的数据
-          TempNoteHandler.filter(id, response)
+          TempNoteHandler
+            .filter(id, response)
+            .onSuccess(_ => println("filter success"))
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need GET")))
@@ -96,7 +104,10 @@ class TempNote extends RestApi {
       case Root / "note" / "gets" =>
         if (request.method.equals(Method.Get)) {
           // 获取所有数据
-          TempNoteHandler.gets(response)
+          TempNoteHandler
+            .gets(response)
+            .onSuccess(_ => println("gets success"))
+
         } else {
           // 请求错误
           response.setContentString(Json.of(Map("message" -> "need GET")))

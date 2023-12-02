@@ -1,9 +1,7 @@
 package org.ruang
 
-import com.twitter.util.Await
 import org.moon.common.config.Configure
 import org.moon.http.CorsSetting
-import org.ruang.register.ZkRegisterCenter
 import org.ruang.remote.RemoteCommand
 import org.ruang.rest.{Mail, TempNote, UserAuth}
 
@@ -13,9 +11,9 @@ object Main {
   private val config: Configure = Configure()
 
   // 注册服务
-  private val zkClient = ZkRegisterCenter.connect(
-    config.getSection("zkServer", "host"),
-    config.getSection("zkServer", "port"))
+  //  private val zkClient = ZkRegisterCenter.connect(
+  //    config.getSection("zkServer", "host"),
+  //    config.getSection("zkServer", "port"))
 
 
   def main(args: Array[String]): Unit = {
@@ -39,6 +37,6 @@ object Main {
     //    new FastZkRegister(zkClient, config)
     //      .add(List("userAuth", "tempNote"))
     // 启动服务
-    servers.foreach(x => Await.result(x))
+    while (true) {}
   }
 }
