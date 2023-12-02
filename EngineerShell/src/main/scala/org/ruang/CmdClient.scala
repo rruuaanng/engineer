@@ -22,14 +22,15 @@ object CmdClient {
          * 邮件命令
          */
         case Syntax.mailSendCmd(op) =>
-          new MailCommand().execute(op)
+          val token = new MailCommand().execute(op)
+          NetReq +> ("localhost:4000", "/command", "POST", token)
 
         /**
          * 笔记相关命令
          */
         case Syntax.tempNoteCmd(op) =>
           new TempNoteCommand().execute(op)
-          println(NetReq +> ("localhost:50020", "/note/gets"))
+
         // 未知命令
         case _ => println("unknown command")
       }

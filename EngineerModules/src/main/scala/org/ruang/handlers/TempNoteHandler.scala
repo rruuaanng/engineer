@@ -11,6 +11,9 @@ import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneOffset, ZonedDateTime}
 import scala.collection.mutable.ListBuffer
 
+// 编写本地化的create,filter,gets,update和delete方法
+// 以支持执行Shell项目远程发送的命令
+// TODO
 object TempNoteHandler {
 
   // JDBC配置

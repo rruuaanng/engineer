@@ -15,11 +15,11 @@ class MailCommand
     op match {
       case "send" =>
         // 读取输入
-        print("please input your mail title")
+        print("please input your mail title: ")
         val title = StdIn.readLine()
-        print("please input your mail text")
+        print("please input your mail text: ")
         val text = StdIn.readLine()
-        print("please input filepath of annex")
+        print("please input filepath of annex: ")
         val filepath = StdIn.readLine()
         // 封装为Token
         Json.of(Map(

@@ -28,9 +28,9 @@ class RemoteCommand extends RestApi {
        */
       case Root / "command" =>
         if (request.method.equals(Method.Post)) {
+          // 获取shell解析后的token
           val body = request.getContentString()
           val json = parse(body)
-
 
           json match {
             case Right(value) =>
@@ -38,23 +38,30 @@ class RemoteCommand extends RestApi {
               // 表示了这个POST包需要执行的操作
               val op = value.hcursor.get[String]("op").getOrElse("")
               op match {
+                /**
+                 * 发送邮件
+                 */
                 case "send" =>
                   // 获取命令中的标题和邮件内容
                   val title = value.hcursor.get[String]("title").getOrElse("")
                   val text = value.hcursor.get[String]("text").getOrElse("")
+                  response.setContentString(Json.of(Map("message" -> "execute success")))
+                  response.status(Status.Ok)
 
-                  println("send")
+                /**
+                 * 笔记相关操作
+                 */
                 case "note" =>
                   println("note")
+
               }
           }
-          response.setContentString(Json.of(Map("message" -> "execute success")))
-          response.status(Status.Ok)
         } else {
           // 请求方法错误
           response.setContentString(Json.of(Map("message" -> "need POST")))
           response.status(Status.MethodNotAllowed)
         }
+
       // 异常请求
       case _ =>
         response.setContentString(Json.of(Map("message" -> "not found")))
