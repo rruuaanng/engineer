@@ -15,7 +15,6 @@ import scala.collection.mutable.ListBuffer
 // 以支持执行Shell项目远程发送的命令
 // TODO
 object TempNoteHandler {
-
   // JDBC配置
   private val dbConfig = JdbcConfig()
     .withHost("localhost")
@@ -61,7 +60,6 @@ object TempNoteHandler {
   def update(id: String, body: String, response: Response): Future[Unit] = Future {
     // 解析JSON
     val json = parse(body)
-
     json match {
       case Right(value) =>
         // 更新上次修改的时间

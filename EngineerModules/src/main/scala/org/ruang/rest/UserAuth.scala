@@ -4,7 +4,7 @@ import com.twitter.finagle.http.path._
 import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
 import org.moon.common.Json
-import org.moon.http.RestApi
+import org.moon.http.RestAPI
 import org.ruang.handlers.UserAuthHandler
 
 import java.util.Date
@@ -14,7 +14,7 @@ import java.util.Date
  *
  * @author RUANG
  */
-class UserAuth extends RestApi {
+class UserAuth extends RestAPI {
 
   override def apply(request: Request): Future[Response] = {
     val response = Response()

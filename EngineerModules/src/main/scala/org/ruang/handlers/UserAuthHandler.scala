@@ -23,7 +23,7 @@ object UserAuthHandler {
   private val jwtHeader = new JWSHeader.Builder(JWSAlgorithm.HS256).build()
 
   // JWT签名密钥
-  private val key = new MACSigner(Configure().getKey("jwtKey"))
+  private val key = new MACSigner(Configure().get("jwtKey"))
 
   // JWT主体
   // Base64解码

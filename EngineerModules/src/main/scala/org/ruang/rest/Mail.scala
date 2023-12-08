@@ -5,9 +5,9 @@ import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
 import io.circe.parser.parse
 import org.moon.common.Json
-import org.moon.http.RestApi
+import org.moon.http.RestAPI
 
-class Mail extends RestApi {
+class Mail extends RestAPI {
   override def apply(request: Request): Future[Response] = {
     val response = Response()
     response.setContentTypeJson()

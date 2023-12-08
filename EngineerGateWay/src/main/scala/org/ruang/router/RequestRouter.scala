@@ -5,7 +5,7 @@ import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
 import org.moon.common.Json
 import org.moon.common.config.Configure
-import org.moon.http.{ApiGateway, ForwardRequest}
+import org.moon.http.{APIGateway, ForwardRequest}
 import org.ruang.discover.ZkServerDiscover
 
 import scala.collection.mutable.ListBuffer
@@ -13,7 +13,7 @@ import scala.collection.mutable.ListBuffer
 /**
  * API网关
  */
-class RequestRouter extends ApiGateway {
+class RequestRouter extends APIGateway {
   override def apply(request: Request): Future[Response] = {
     val response = Response()
     response.setContentTypeJson()

@@ -4,7 +4,7 @@ import com.twitter.finagle.http.path._
 import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
 import org.moon.common.Json
-import org.moon.http.RestApi
+import org.moon.http.RestAPI
 import org.ruang.handlers.TempNoteHandler
 
 /**
@@ -12,7 +12,7 @@ import org.ruang.handlers.TempNoteHandler
  *
  * @author RUANG
  */
-class TempNote extends RestApi {
+class TempNote extends RestAPI {
 
 
   override def apply(request: Request): Future[Response] = {

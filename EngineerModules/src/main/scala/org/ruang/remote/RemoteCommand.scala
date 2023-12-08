@@ -5,12 +5,12 @@ import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
 import io.circe.parser.parse
 import org.moon.common.Json
-import org.moon.http.RestApi
+import org.moon.http.RestAPI
 
 /**
  * 接收远程发送的命令
  */
-class RemoteCommand extends RestApi {
+class RemoteCommand extends RestAPI {
   /*
   shell将接收到的命令封装为JSON，通过POST请求发送到modules（本文件）
   然后对POST包中的命令进行解析并调用对应接口，将结果已字符串的形式返回到shell
